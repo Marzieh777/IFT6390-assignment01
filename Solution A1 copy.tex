@@ -1,0 +1,110 @@
+\documentclass[12pt,english]{amsart}
+\usepackage{amssymb,amsmath,amscd,graphicx,fontenc,bbold,bm,amsthm,mathrsfs,mathtools}
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref} 
+ \usepackage{comment}
+ % \usepackage{verbatim}
+\hypersetup{linkcolor=blue,citecolor=red,filecolor=dullmagenta,urlcolor=blue}
+%\usepackage{showkeys}
+%=============
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}{Remark}
+\newtheorem{conj}{Conjecture}
+\newtheorem{notation}{Notation}
+%==========================================
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+\newcommand{\snxk}{\pi(x,k)}
+\newcommand{\bnxk}{{\mathrm{N}}(x,k)}
+\newcommand{\px}[1]{\pi(x,{#1})}
+\newcommand{\Px}[1]{\Pi(x,{#1})}
+\newcommand{\pd}{\frac{\partial}{\partial}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[top=3cm,bottom=3cm,right=2.3cm,left=2.3cm,twoside=false]{geometry}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Representation Learning, Assignment 4}
+\author{Marzieh Mehdizadeh}
+%\address{ D\'{e}partment de Math\'{e}matiques et Statistique,Universit\'{e} de Montr\'{e}al, CP 6128, succ.
+%Centre-ville, Montr\'{e}al, QC, Canada H3C 3J7.}
+%\email{marzieh.mehdizadeh@gmail.com}
+\date{}
+%\linespread{1.15}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+
+\maketitle
+%\tableofcontents
+
+\textbf{1 Small exercise on probabilities}\\\\
+
+First we define the following random variables:\\
+$A:=$ To have cancer, $B:=$ Positive test and $\neg A:= $Not to have cancer .
+
+Now we want to calculate the probability of people who have cancer with the condition that their test is positive so we should compute $P(A|B)$, where $P$ indicates the probability function. By using Bayes Rule we have
+
+$$P(A|B)= \frac{P(A) P(B|A)}{P(B)}$$
+
+By applying the given information we have
+$P(A)= 0.015$ , $P(B|A)=0.87$, $P(B|\neg A)= 0.096$ and 
+ $P(B)= P(B|A)P(A)+P(B| \neg A)P(\neg A)= 0.013+0.94= 0.107 $. So by substituting in the Bayes Rule we have
+ 
+ $$ P(A|B)= \frac{0.01305}{0.966} \sim 0.107= 10.7 \%$$
+ 
+The answer is $E$, so the doctors are wrong! \\\\
+
+\textbf{2 Curse of dimensionality and geometric intuition
+in higher dimensions}
+
+
+\textbf{1:} $V= c^d$\\
+
+\textbf{2:} Let $X=(x_1, x_2, \cdots, x_d)$. Since the points are uniformly distributed in the hypercube, so the probability that a point is inside the hypercube is $$P(X\in \text{Hypercube})=P(X)=1/V= \frac{1}{c^d}$$
+
+If we assume that $$P(X)= P((x_1, x_2,\cdots, x_d))= M $$, for some constant $M$, then by using the properties of probability function we have:
+$$\int_{0}^{c}\int_{0}^{c}\cdots \int_{0}^{c} P((x_1, x_2,\cdots, x_d)) dx_1 dx_2 \cdots dx_d= \int_{0}^{c}\int_{0}^{c}\cdots \int_{0}^{c} M dx_1 dx_2 \cdots dx_d=1$$
+So we have
+
+$$M= \frac{1}{\int_{0}^{c}\int_{0}^{c}\cdots \int_{0}^{c}  dx_1 dx_2 \cdots dx_d} = \frac{1}{c^d} = 1/V$$.\\\\
+\textbf{3:}  The length of the smaller Hypercube in each dimension is as follows:
+$$c_{in}  = c- 2\times 0.03 \times c$$ 
+So the volume of the smaller hypercube is:
+
+$$V_{in}=  \left(c- 2\times 0.03 \times c\right)^d$$
+So the probability that a point is in the smaller hypercube is
+$$P(X\in V_{in})= \frac{\left(c- 2\times 0.03 \times c\right)^d}{c^d} =\left( \frac{94}{100}\right)^d$$
+and consequently, the probability that a point is in the border area is:
+$$P(X\in V_{out})= 1- P(X\in V_{in})= 1-\left( \frac{94}{100}\right)^d .$$\\\\
+\textbf{4:}
+$$d= 1 \Rightarrow P(V_{in})= \frac{94}{100}= 0.94 \quad \text{and} \quad P(V_{out})= \frac{6}{100}=0.06,$$
+
+$$d= 2 \Rightarrow P(V_{in})= \left(\frac{94}{100} \right)^2= 0.8836\quad \text{and} \quad P(V_{out})=1-\left(\frac{94}{100}\right)^2\sim 0.12,$$
+$$d= 3 \Rightarrow P(V_{in})= \left(\frac{94}{100} \right)^3\sim 0.83\quad \text{and} \quad P(V_{out})= 1-\left(\frac{94}{100}\right)^3\sim 0.17,$$
+$$d= 5 \Rightarrow P(V_{in})= \left(\frac{94}{100} \right)^5 \sim0.73\quad \text{and} \quad P(V_{out})=1-\left(\frac{94}{100}\right)^5\sim 0.27,$$
+$$d= 10 \Rightarrow P(V_{in})= \left(\frac{94}{100}\right)^{10} \sim 0.54 \quad \text{and} \quad P(V_{out})= 1-\left(\frac{94}{100}\right)^{10}\sim 0.56$$
+$$d= 100 \Rightarrow P(V_{in})= \left(\frac{94}{100}\right)^{100}  \sim 0.002\quad \text{and} \quad P(V_{out})=1-\left(\frac{94}{100}\right)^{100}\sim 0.998,$$
+$$d= 1000\Rightarrow P(V_{in})= \left(\frac{94}{100} \right)^{1000} \sim 0\quad \text{and} \quad P(V_{out})= 1-\left(\frac{94}{100}\right)^{1000}\sim 100.$$
+
+\textbf{5:} By the previous part we can conclude that as the dimension gets bigger and bigger then the probability of the smaller  hypercube gets smaller while the probability of the border area gets bigger. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
