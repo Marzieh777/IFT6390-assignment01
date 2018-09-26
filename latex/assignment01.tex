@@ -1,7 +1,7 @@
 \documentclass[12pt]{article}
 \usepackage[margin=1in]{geometry} 
 \usepackage{amsmath,amsthm,amssymb,amsfonts}
-
+\usepackage{bm}
 \setlength{\parindent}{0pt}
 
 \newcommand{\N}{\mathbb{N}}
@@ -39,7 +39,7 @@ $$
 \sigma_{i, i} = \frac{1}{n}\sum_{j=1}^n (x^{(j)}_i-\mu_i)^2
 $$\\
 
-(c) The complexity of computing the average over a feature $O(n)$. The complexity of computing the variance over a feature is $O(n)$. Both of this computation needs to be done $d$ times. Thus, the complexity of the method is $O(n)$ \\
+(c) The complexity of computing the average over a feature $O(n)$. The complexity of computing the variance over a feature is $O(n)$. Both of this computation needs to be done $d$ times. Thus, the complexity of the method is $O(dn)$ \\
 
 (d) The density estimation of an isotropic gaussian
 $$
@@ -49,10 +49,10 @@ $$
 $$
 where $\hat{\mu}$ and $\hat{\sigma}$ are the estimators in (c).\\
 
-(e) The complexity is $O(1)$.
+(e) The complexity is $O(d)$ since computing the dot product between $x$ and $\mu$ needs $d$ substraction, $d$ mutiplication (square), and $d$ addition, all linear in $d$.
 
 \subsection*{Question 2}
-(a) There is no learning since the prediction is only a function of $\sigma$.\\
+(a) The algorithm learn (memorize) the dataset.\\
 
 (b) The Gaussian Parzen window density estimation of $x$ is given by 
 $$
@@ -66,32 +66,83 @@ K(x^{(i)}, x) =
 $$
 If we replace the kernel in the density we obtain
 $$
-\hat{p}(x) = \frac{\exp(\frac{1}{2\sigma^2})}{n(2\pi)^\frac{d}{2}\sigma^d}\sum_{i=1}^n
-\exp\left(-||x^{(i)}-x||^2\right)
+\hat{p}(x) = \frac{1}{n(2\pi)^\frac{d}{2}\sigma^d}\sum_{i=1}^n
+\exp\left(-\frac{1}{2}\frac{||x^{(i)}-x||^2}{\sigma^2}\right)
 $$
-(c) The complexity is $O(n)$. \\
+(c) The complexity is $O(dn)$ since the complexity of computing the euclidian distance is $O(d)$ and we sum over $n$ examples. \\
 
 \subsection*{Question 3}
-(a) The parametric Gaussian has more capacity because it has more parameters. Alse, parameters of the parametric Gaussian are learn based on the training set, while the parameter of the KDE is more like an hyperparameter making it more difficult to overfit the training set with the KDE.\\
+(a) The Parzen  as more capacity because its memorizing all the dataset in order to make a prediction. The parametric gaussian is compressing all the information about the underlying distribution of the data in two variable si it needs to summarize the important information in far less parameters.\\
 
-(b) If you don't have enough data, the parametric Gaussian is likely to overfit.\\
+(b) If the variance of the Parzen method is low, it is likely to overfit.\\
 
 (c) The parameters of the parametric Gaussian are learned parameters. We don't have to use optimization technic like the one use in deep learning since it is possible to obtain an anlytic (or closed) solution for the parameters that minimized the log-likelihood in the case of the parametric Gaussian density estimation. The variance in KDE is not selected by optimization of a learning criteria.
 
 \subsection*{Question 4}
 (a) The density of a diagonal multivariate Gaussian is given by
 \begin{equation}
-p(x) 
+p(\bm{x}) 
 = \frac{1}{(2\pi)^\frac{d}{2}\sqrt{|\Sigma|}}
 \exp\left(
-   - \frac{1}{2}(x-\mu)^\top\Sigma^{-1}(x-\mu)
+   - \frac{1}{2}(\bm{x}-\bm{\mu})^\top\Sigma^{-1}(\bm{x}-\bm{\mu})
 \right)
 \label{eq:diag_normal}
 \end{equation}
-where $\mu$ and $\Sigma$ are the parameters. The dimension of $\mu$ is $d$ and the dimentsion of $\Sigma$ is $d\times d$.\\
+where $\bm{x}=(x_1,...,x_d)^\top $ and $\bm{\mu}=(\mu_1,...,\mu_d)^\top$ and $\Sigma=\left(\sigma_{ij}\right)_{i=1,..,d; j=1,...,d}$ are the parameters. The dimension of $\mu$ is $d$ and the dimentsion of $\Sigma$ is $d\times d$.\\
 
-(b) Two variable $X$ and $Y$ are independant if $p(X, Y)=p(X)p(Y)$.\\
+(b) In this question, $\sigma_{ij}$ is the covariance between $X_i$ and $X_j$ as oppose to the standard deviation oftenly denote by $\sigma$. A set of random variables $X_1,...,X_d$ is independent if the joint density is equal to the product of the marginal density, i.e. $p(X_1,...,X_d)=p(X_1)\cdots p(X_d)$. Also, the marginal density is given by
+$$
+    p(X_i) = (2\pi\sigma_i)^{-\frac{1}{2}} 
+    \exp
+    \left(
+        \frac{(X_i-\mu_i)^2}{2\sigma_{ii}}
+    \right),
+    i=1,...,d
+$$
+Since $\Sigma$ is diagonal, its inverse is given by 
+$$
+    \Sigma^{-1} = 
+    \begin{pmatrix}
+        \sigma_{11}^{-1} & \hdots & 0 \\
+        \vdots & \ddots & \vdots \\
+        0 & \hdots & \sigma_{dd}^{-1}
+    \end{pmatrix}
+$$
+where $\sigma_{ii}$ is the variance of $X_i$ (not the standard deviation!).
+Also, the numerator in \ref{eq:diag_normal} can be writen has
 
+\begin{equation}
+	\begin{split}
+		(\bm{x}-\bm{\mu})^\top \Sigma^{-1}(\bm{x}-\bm{\mu})=&
+		\begin{bmatrix}
+        			(x_1-\mu_1)\sigma_{11}^{-1} 
+        			\cdots 
+        			 (x_d-\mu_d)\sigma_{dd}^{-1}
+    		\end{bmatrix}
+		\begin{bmatrix}
+        			(x_1-\mu_1) \\
+        			\vdots \\
+        			 (x_d-\mu_d)
+    		\end{bmatrix}\\
+		=& \sum_{i=1}^d (x_i-\mu_i)^2 \sigma_{ii}^{-1}
+	\end{split}
+\end{equation}
+Also, the determinant of a diagonal matrix is given by the product of the element of the diagonal. Hence, we can rewrite the joint density has
+\begin{equation}
+	\begin{split}
+		p(\bm{x}) =& (2\pi)^{-\frac{d}{2}}\sqrt{\Pi_{i=1}^d \sigma_{ii}^{-1}}
+		\exp\left(
+        			-\frac{1}{2}
+			\sum_{i=1}^d (x_i-\mu_i)^2 \sigma_{ii}^{-1}
+    		\right)\\
+		=&\Pi_{i=1}^d (2\pi)^{-\frac{1}{2}} \sigma_{ii}^{-\frac{1}{2}}
+		\exp\left(
+        			-\frac{1}{2}
+			(x_i-\mu_i)^2 \sigma_{ii}^{-1}
+    		\right)
+	\end{split}
+\end{equation}
+which is the product of the marginal density.\\
 (c) We want to minimize 
 \begin{equation}
 \begin{split}
