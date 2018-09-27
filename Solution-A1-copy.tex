@@ -1,0 +1,316 @@
+\documentclass[12pt,english]{amsart}
+\usepackage{amssymb,amsmath,amscd,graphicx,fontenc,bbold,bm,amsthm,mathrsfs,mathtools}
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref} 
+ \usepackage{comment}
+ % \usepackage{verbatim}
+\hypersetup{linkcolor=blue,citecolor=red,filecolor=dullmagenta,urlcolor=blue}
+%\usepackage{showkeys}
+%=============
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}{Remark}
+\newtheorem{conj}{Conjecture}
+\newtheorem{notation}{Notation}
+%==========================================
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+\newcommand{\snxk}{\pi(x,k)}
+\DeclareMathOperator{\Tr}{Tr}
+\newcommand{\bnxk}{{\mathrm{N}}(x,k)}
+\newcommand{\px}[1]{\pi(x,{#1})}
+\newcommand{\Px}[1]{\Pi(x,{#1})}
+\newcommand{\pd}{\frac{\partial}{\partial}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[top=3cm,bottom=3cm,right=2.3cm,left=2.3cm,twoside=false]{geometry}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Machine learning, Assignment 1}
+\author{ Jonathan Guymont, Marzieh Mehdizadeh}
+%\address{ D\'{e}partment de Math\'{e}matiques et Statistique,Universit\'{e} de Montr\'{e}al, CP 6128, succ.
+%Centre-ville, Montr\'{e}al, QC, Canada H3C 3J7.}
+%\email{marzieh.mehdizadeh@gmail.com}
+\date{}
+%\linespread{1.15}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+
+\maketitle
+%\tableofcontents
+
+\textbf{1 Small exercise on probabilities}\\\\
+
+First we define the following random variables:\\
+$A:=$ To have cancer, $B:=$ Positive test and $\neg A:= $Not to have cancer .
+
+Now we want to calculate the probability of people who have cancer with the condition that their test is positive so we should compute $P(A|B)$, where $P$ indicates the probability function. By using Bayes Rule we have
+
+$$P(A|B)= \frac{P(A) P(B|A)}{P(B)}$$
+
+By applying the given information we have
+$P(A)= 0.015$ , $P(B|A)=0.87$, $P(B|\neg A)= 0.096$ and 
+ $P(B)= P(B|A)P(A)+P(B| \neg A)P(\neg A)= 0.013+0.94= 0.107 $. So by substituting in the Bayes Rule we have
+ 
+ $$ P(A|B)= \frac{0.01305}{0.966} \sim 0.107= 10.7 \%$$
+ 
+The answer is $E$, so the doctors are wrong! \\\\
+
+\textbf{2 Curse of dimensionality and geometric intuition
+in higher dimensions}
+
+
+\textbf{1:} $V= c^d$\\
+
+\textbf{2:} Let $X=(x_1, x_2, \cdots, x_d)$. Since the points are uniformly distributed in the hypercube, so the probability that a point is inside the hypercube is $$P(X\in \text{Hypercube})=P(X)=1/V= \frac{1}{c^d}$$
+
+If we assume that $$P(X)= P((x_1, x_2,\cdots, x_d))= M $$, for some constant $M$, then by using the properties of probability function we have:
+$$\int_{0}^{c}\int_{0}^{c}\cdots \int_{0}^{c} P((x_1, x_2,\cdots, x_d)) dx_1 dx_2 \cdots dx_d= \int_{0}^{c}\int_{0}^{c}\cdots \int_{0}^{c} M dx_1 dx_2 \cdots dx_d=1$$
+So we have
+
+$$M= \frac{1}{\int_{0}^{c}\int_{0}^{c}\cdots \int_{0}^{c}  dx_1 dx_2 \cdots dx_d} = \frac{1}{c^d} = 1/V$$.\\\\
+\textbf{3:}  The length of the smaller Hypercube in each dimension is as follows:
+$$c_{in}  = c- 2\times 0.03 \times c$$ 
+So the volume of the smaller hypercube is:
+
+$$V_{in}=  \left(c- 2\times 0.03 \times c\right)^d$$
+So the probability that a point is in the smaller hypercube is
+$$P(X\in V_{in})= \frac{\left(c- 2\times 0.03 \times c\right)^d}{c^d} =\left( \frac{94}{100}\right)^d$$
+and consequently, the probability that a point is in the border area is:
+$$P(X\in V_{out})= 1- P(X\in V_{in})= 1-\left( \frac{94}{100}\right)^d .$$\\\\
+\textbf{4:}
+$$d= 1 \Rightarrow P(V_{in})= \frac{94}{100}= 0.94 \quad \text{and} \quad P(V_{out})= \frac{6}{100}=0.06,$$
+
+$$d= 2 \Rightarrow P(V_{in})= \left(\frac{94}{100} \right)^2= 0.8836\quad \text{and} \quad P(V_{out})=1-\left(\frac{94}{100}\right)^2\sim 0.12,$$
+$$d= 3 \Rightarrow P(V_{in})= \left(\frac{94}{100} \right)^3\sim 0.83\quad \text{and} \quad P(V_{out})= 1-\left(\frac{94}{100}\right)^3\sim 0.17,$$
+$$d= 5 \Rightarrow P(V_{in})= \left(\frac{94}{100} \right)^5 \sim0.73\quad \text{and} \quad P(V_{out})=1-\left(\frac{94}{100}\right)^5\sim 0.27,$$
+$$d= 10 \Rightarrow P(V_{in})= \left(\frac{94}{100}\right)^{10} \sim 0.54 \quad \text{and} \quad P(V_{out})= 1-\left(\frac{94}{100}\right)^{10}\sim 0.56$$
+$$d= 100 \Rightarrow P(V_{in})= \left(\frac{94}{100}\right)^{100}  \sim 0.002\quad \text{and} \quad P(V_{out})=1-\left(\frac{94}{100}\right)^{100}\sim 0.998,$$
+$$d= 1000\Rightarrow P(V_{in})= \left(\frac{94}{100} \right)^{1000} \sim 0\quad \text{and} \quad P(V_{out})= 1-\left(\frac{94}{100}\right)^{1000}\sim 100.$$
+
+\textbf{5:} By the previous part we can conclude that as the dimension gets bigger and bigger then the probability of the smaller  hypercube gets smaller while the probability of the border area gets bigger. 
+
+\section*{Parametric Gaussian density estimation, v.s. Parzen
+window density estimation}
+
+\subsection*{Question 1}
+(a) The density estimation of an isotropic gaussian
+$$
+    N_{\mu, \sigma}(x)
+    = \frac{1}{(2\pi)^\frac{d}{2}\sigma^d}
+    \exp(-\frac{1}{2}\frac{||x-\mu||^2}{\sigma^2})
+$$
+and the parameters are the mean $\mu$ and the covariance matrix $\Sigma$. The dimension of $\mu$ is $d$ and the dimension of $\Sigma$ is $d\times d$.\\
+
+(b) The mean $\mu$ is given by $(\mu_1,...,\mu_d)^\top$ where
+$$
+\mu_i = \frac{1}{n}\sum_{j=1}^n x^{(j)}_i, i=1,...,d. 
+$$
+Since the gaussian is isotropic, we have that $\Sigma_{i,j}=0$ for all $i\neq j$ and $\Sigma_{i,i}=\Sigma_{j,j}$ for all $i, j$ (e.g. each feature of $x$ has the same variance). The log-likelihood estimator of the variance in the isotropic case is given by $\hat{\sigma}_{MLE} I$, where $\hat{\sigma}_{MLE}$ is the average over the empirical variances of the features
+$$
+\sigma = \frac{1}{d}\sum_{i=1}^d \sigma_{i, i}
+$$
+where
+$$
+\sigma_{i, i} = \frac{1}{n}\sum_{j=1}^n (x^{(j)}_i-\mu_i)^2
+$$\\
+
+(c) The complexity of computing the average over a feature $O(n)$. The complexity of computing the variance over a feature is $O(n)$. Both of this computation needs to be done $d$ times. Thus, the complexity of the method is $O(dn)$ \\
+
+(d) The density estimation of an isotropic gaussian
+$$
+    \hat{p}(x)
+    = \frac{1}{(2\pi)^\frac{d}{2}\hat{\sigma}^d}
+    \exp(-\frac{1}{2}\frac{||x-\hat{\mu}||^2}{\hat{\sigma}^2})
+$$
+where $\hat{\mu}$ and $\hat{\sigma}$ are the estimators in (c).\\
+
+(e) The complexity is $O(d)$ since computing the dot product between $x$ and $\mu$ needs $d$ substraction, $d$ mutiplication (square), and $d$ addition, all linear in $d$.
+
+\subsection*{Question 2}
+(a) The algorithm learn (memorize) the dataset.\\
+
+(b) The Gaussian Parzen window density estimation of $x$ is given by 
+$$
+    \hat{p}(x) = \frac{1}{n}\sum_{i=1}^n K(x^{(i)}, x)
+$$
+where 
+$$
+K(x^{(i)}, x) =
+\frac{1}{(2\pi)^\frac{d}{2}\sigma^d}
+\exp\left(-\frac{1}{2}\frac{||x^{(i)}-x||^2}{\sigma^2}\right)
+$$
+If we replace the kernel in the density we obtain
+$$
+\hat{p}(x) = \frac{1}{n(2\pi)^\frac{d}{2}\sigma^d}\sum_{i=1}^n
+\exp\left(-\frac{1}{2}\frac{||x^{(i)}-x||^2}{\sigma^2}\right)
+$$
+(c) The complexity is $O(dn)$ since the complexity of computing the euclidian distance is $O(d)$ and we sum over $n$ examples. \\
+
+\subsection*{Question 3}
+(a) The Parzen  as more capacity because its memorizing all the dataset in order to make a prediction. The parametric gaussian is compressing all the information about the underlying distribution of the data in two variable si it needs to summarize the important information in far less parameters.\\
+
+(b) If the variance of the Parzen method is low, it is likely to overfit.\\
+
+(c) The parameters of the parametric Gaussian are learned parameters. We don't have to use optimization technic like the one use in deep learning since it is possible to obtain an anlytic (or closed) solution for the parameters that minimized the log-likelihood in the case of the parametric Gaussian density estimation. The variance in KDE is not selected by optimization of a learning criteria.
+
+\subsection*{Question 4}
+(a) The density of a diagonal multivariate Gaussian is given by
+\begin{equation}
+p(\bm{x}) 
+= \frac{1}{(2\pi)^\frac{d}{2}\sqrt{|\Sigma|}}
+\exp\left(
+   - \frac{1}{2}(\bm{x}-\bm{\mu})^\top\Sigma^{-1}(\bm{x}-\bm{\mu})
+\right)
+\label{eq:diag_normal}
+\end{equation}
+where $\bm{x}=(x_1,...,x_d)^\top $ and $\bm{\mu}=(\mu_1,...,\mu_d)^\top$ and $\Sigma=\left(\sigma_{ij}\right)_{i=1,..,d; j=1,...,d}$ are the parameters. The dimension of $\mu$ is $d$ and the dimentsion of $\Sigma$ is $d\times d$.\\
+
+(b) In this question, $\sigma_{ij}$ is the covariance between $X_i$ and $X_j$ as oppose to the standard deviation oftenly denote by $\sigma$. A set of random variables $X_1,...,X_d$ is independent if the joint density is equal to the product of the marginal density, i.e. $p(X_1,...,X_d)=p(X_1)\cdots p(X_d)$. Also, the marginal density is given by
+$$
+    p(X_i) = (2\pi\sigma_i)^{-\frac{1}{2}} 
+    \exp
+    \left(
+        \frac{(X_i-\mu_i)^2}{2\sigma_{ii}}
+    \right),
+    i=1,...,d
+$$
+Since $\Sigma$ is diagonal, its inverse is given by 
+$$
+    \Sigma^{-1} = 
+    \begin{pmatrix}
+        \sigma_{11}^{-1} & \hdots & 0 \\
+        \vdots & \ddots & \vdots \\
+        0 & \hdots & \sigma_{dd}^{-1}
+    \end{pmatrix}
+$$
+where $\sigma_{ii}$ is the variance of $X_i$ (not the standard deviation!).
+Also, the numerator in \ref{eq:diag_normal} can be writen has
+
+\begin{equation}
+	\begin{split}
+		(\bm{x}-\bm{\mu})^\top \Sigma^{-1}(\bm{x}-\bm{\mu})=&
+		\begin{bmatrix}
+        			(x_1-\mu_1)\sigma_{11}^{-1} 
+        			\cdots 
+        			 (x_d-\mu_d)\sigma_{dd}^{-1}
+    		\end{bmatrix}
+		\begin{bmatrix}
+        			(x_1-\mu_1) \\
+        			\vdots \\
+        			 (x_d-\mu_d)
+    		\end{bmatrix}\\
+		=& \sum_{i=1}^d (x_i-\mu_i)^2 \sigma_{ii}^{-1}
+	\end{split}
+\end{equation}
+Also, the determinant of a diagonal matrix is given by the product of the element of the diagonal. Hence, we can rewrite the joint density has
+\begin{equation}
+	\begin{split}
+		p(\bm{x}) =& (2\pi)^{-\frac{d}{2}}\sqrt{\Pi_{i=1}^d \sigma_{ii}^{-1}}
+		\exp\left(
+        			-\frac{1}{2}
+			\sum_{i=1}^d (x_i-\mu_i)^2 \sigma_{ii}^{-1}
+    		\right)\\
+		=&\Pi_{i=1}^d (2\pi)^{-\frac{1}{2}} \sigma_{ii}^{-\frac{1}{2}}
+		\exp\left(
+        			-\frac{1}{2}
+			(x_i-\mu_i)^2 \sigma_{ii}^{-1}
+    		\right)
+	\end{split}
+\end{equation}
+which is the product of the marginal density.\\
+(c) We want to minimize 
+\begin{equation}
+\begin{split}
+    L =& - \frac{1}{n}\sum_{i=1}^n \log p(x^{(i)})
+\end{split}
+\end{equation}
+with
+\begin{equation}
+    \log p(x) = -\frac{d}{2}\log 2\pi - \frac{1}{2}\log|\Sigma| - \frac{1}{2}(x-\mu)^\top\Sigma^{-1}(x-\mu)
+    \label{eq:loglike2}
+\end{equation}
+Since the first term of \ref{eq:loglike2} is constant with respect to the learn parameters, the function to minimize is
+\begin{equation}
+\begin{split}
+    L = \frac{1}{2}\log|\Sigma| + \frac{1}{n}\sum_{i=1}^n\frac{1}{2}(x-\mu)^\top\Sigma^{-1}(x-\mu) + const
+\end{split}
+\label{eq:loglike3}
+\end{equation}
+
+(d) We first optimize in $\mu$. 
+\begin{equation}
+\begin{split}
+   \frac{\partial}{\partial \mu} L
+=& \frac{1}{n} \sum_{i=1}^{n} \frac{1}{2}\left(-\Sigma^{-1}(x-\mu)- (x-\mu)^\top \Sigma^{-1} \right)\\
+=& \frac{1}{n} \sum_{i=1}^{n} \frac{1}{2}\left(-\Sigma^{-1}(x-\mu)- \Sigma^{-1}(x-\mu) \right)\\
+=& \frac{1}{n} \sum_{i=1}^{n} \frac{1}{2}\left(-2\Sigma^{-1}(x-\mu) \right)\\
+=& -\frac{1}{n} \sum_{i=1}^{n}\Sigma^{-1}(x-\mu) \\
+\end{split}
+\end{equation}
+Setting the derivative equal to 0, we have
+\begin{equation}
+\begin{split}
+ -\Sigma^{-1}\frac{1}{n} \sum_{i=1}^{n}(x-\mu)=&0 \\
+\Sigma\cdot \Sigma^{-1}\frac{1}{n} \sum_{i=1}^{n}\Sigma^{-1}(x-\mu)=&\Sigma \cdot 0 \\
+\frac{1}{n} \sum_{i=1}^{n}x=& \frac{1}{n} \sum_{i=1}^{n}\mu \\
+\frac{1}{n} \sum_{i=1}^{n}x=& \mu \\
+\end{split}
+\end{equation}
+We now compute the derivative with respect to $\Sigma$. Note that $(x-\mu)^\top\Sigma^{-1}(x-\mu)$ is a scalar, hence it is equal to its trace. Also, using the fact that $\Tr AB = \Tr BA$, we have that  $(x-\mu)^\top\Sigma^{-1}(x-\mu)=\Tr (x-\mu)^\top\Sigma^{-1}(x-\mu)=\Tr (x-\mu)(x-\mu)^\top\Sigma^{-1}=\Tr \Sigma^{-1}(x-\mu)(x-\mu)^\top$. Replacing in equation \ref{eq:loglike3} we have
+\begin{equation}
+\begin{split}
+    L 
+=& \frac{1}{2}\log|\Sigma| + \frac{1}{2n}\sum_{i=1}^n(x-\mu)^\top\Sigma^{-1}(x-\mu) + const\\
+=& \frac{1}{2}\log|\Sigma| + \frac{1}{2n}\sum_{i=1}^n\Tr \Sigma^{-1}(x-\mu)(x-\mu)^\top + const\\
+=& \frac{1}{2}\log|\Sigma| + \frac{1}{2n}\Tr\Sigma^{-1}\sum_{i=1}^n(x-\mu)(x-\mu)^\top + const\\
+\end{split}
+\label{eq:loglike4}
+\end{equation}
+To simplify the notation, let $S=\sum_{i=1}^n(x-\mu)(x-\mu)^\top$. We now have
+\begin{equation}
+\begin{split}
+    L 
+=& \frac{1}{2}\log|\Sigma| + \frac{1}{2n}\Tr\Sigma^{-1}S + const\\
+\end{split}
+\label{eq:loglike5}
+\end{equation}
+Setting $\Lambda=\Sigma^{-1}$ we have \footnote{This trick comes from University of British Columbia course notes: https://www.cs.ubc.ca/~schmidtm/Courses/540-W17/L9.pdf}
+\begin{equation}
+\begin{split}
+    L 
+=& \frac{1}{2}\log|\Lambda^{-1}| + \frac{1}{2n}\Tr\Lambda S + const\\
+=& -\frac{1}{2}\log|\Lambda| + \frac{1}{2n}\Tr\Lambda S + const\\
+\end{split}
+\label{eq:loglike6}
+\end{equation}
+Taking the derivative w.r.t $\Sigma$, setting it to zero, and using the fact that the derivative of the log of the determinant a matrix is the inverse of the said matrix, and that $\nabla_B \Tr AB=A$ we have
+\begin{equation}
+\begin{split}
+ -\Lambda^{-1} + \frac{1}{n}S=&0\\
+ \Lambda^{-1} =& \frac{1}{n}S\\
+\Sigma =& \frac{1}{n}S\\
+\Sigma =& \frac{1}{n}\sum_{i=1}^n(x-\mu)(x-\mu)^\top\\
+\end{split}
+\label{eq:loglike7}
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
